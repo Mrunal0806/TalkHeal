@@ -255,3 +255,18 @@ data
 *.sqlite3
 users.db
 journals.db
+# Ignore virtual environments
+mp_env/
+venv/
+.env/
+
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore Python cache
+__pycache__/
+*.pyc

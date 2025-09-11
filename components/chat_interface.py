@@ -5,6 +5,7 @@ from core.utils import get_current_time, get_ai_response, save_conversations
 import requests
 import textwrap
 
+<<<<<<< HEAD
 # Ensures essential session state variables exist with default values to prevent errors
 if "pinned_messages" not in st.session_state:
     st.session_state.pinned_messages = []
@@ -15,6 +16,8 @@ if "active_conversation" not in st.session_state:
 if "conversations" not in st.session_state:
     st.session_state.conversations = []
 
+=======
+>>>>>>> 7aad9a9 (Clean commit: add project files, ignore env & checkpoints)
 # Custom CSS for enhanced button styling
 def inject_custom_css():
     st.markdown("""
@@ -436,6 +439,7 @@ def show_session_summary(active_convo):
             sender_icon = "👤" if msg["sender"] == "user" else "🤖"
             st.markdown(f"{sender_icon} **{msg['sender'].title()}:** {msg['message'][:100]}{'...' if len(msg['message']) > 100 else ''}")
 
+<<<<<<< HEAD
 # Functions to handle pinning/unpinning messages and rendering the chat interface with pin buttons
 #Adds/removes a message from pinned messages in session state
 def toggle_pin_message(msg, convo_id):
@@ -564,6 +568,39 @@ def render_pinned_messages():
         st.markdown("### 📌 Pinned Messages")
         for msg in st.session_state.pinned_messages:
             st.markdown(f"{msg['message']}")
+=======
+
+# Display chat messages
+def render_chat_interface():    
+    # Inject custom CSS for enhanced button styling
+    inject_custom_css()
+    
+    if st.session_state.active_conversation >= 0:
+        active_convo = st.session_state.conversations[st.session_state.active_conversation]
+        
+        if not active_convo["messages"]:
+            st.markdown(f"""
+<div class="welcome-message">
+    <strong>Hello! I'm TalkHeal, your mental health companion 🤗</strong><br>
+    How are you feeling today? You can write below or start a new topic.
+    <div class="message-time">{get_current_time()}</div>
+</div>
+            """, unsafe_allow_html=True)
+        
+        chat_html = '<div class="chat-container">'
+
+        for msg in active_convo["messages"]:
+            css_class = "user-message" if msg["sender"] == "user" else "bot-message"
+            chat_html += f"""
+<div class="{css_class}">
+    {msg["message"]}
+    <div class="message-time">{msg["time"]}</div>
+</div>
+"""
+        chat_html += '</div>'
+        st.markdown(chat_html, unsafe_allow_html=True)
+
+>>>>>>> 7aad9a9 (Clean commit: add project files, ignore env & checkpoints)
 
 
 def render_session_controls():

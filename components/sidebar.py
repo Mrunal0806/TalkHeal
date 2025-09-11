@@ -258,6 +258,7 @@ def render_ambient_sounds():
             st.markdown("• Enhances mindfulness and focus")
             st.markdown("• Creates a therapeutic environment")
 
+<<<<<<< HEAD
 # Renders the sidebar with a pinned messages count and a button to navigate to the Pinned Messages page
 
 def render_sidebar():
@@ -276,6 +277,10 @@ def render_sidebar():
         st.session_state.active_page = "PinnedMessages"
         st.rerun()
 
+=======
+def render_sidebar():
+    """Renders the left sidebar with organized sections."""
+>>>>>>> 7aad9a9 (Clean commit: add project files, ignore env & checkpoints)
     
     with st.sidebar:
         # Theme Settings Section
@@ -303,7 +308,11 @@ def render_sidebar():
                 <span class="theme-name">{current_theme['name']} Mode</span>
             </div>
             """, unsafe_allow_html=True)
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 7aad9a9 (Clean commit: add project files, ignore env & checkpoints)
             # Theme toggle button
             button_text = "🌙 Switch to Dark" if not is_dark else "☀️ Switch to Light"
             button_type = "primary" if not is_dark else "secondary"
@@ -419,4 +428,8 @@ def render_sidebar():
                 else:
                     st.session_state.cancel_clicked = False
         else:
+<<<<<<< HEAD
             st.info("No conversations yet. Start a new chat!")
+=======
+            st.info("No conversations yet. Start a new chat!")
+>>>>>>> 7aad9a9 (Clean commit: add project files, ignore env & checkpoints)
