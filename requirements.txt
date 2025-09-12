@@ -16,13 +16,11 @@ pygame
 streamlit-modal
 streamlit_js_eval
 scikit-learn
-<<<<<<< HEAD
 pandas
 numpy
-=======
 numpy
 opencv-python
 mediapipe==0.10.14
 tensorflow
-
->>>>>>> 7aad9a9 (Clean commit: add project files, ignore env & checkpoints)
+python-dotenv
+PyJWT

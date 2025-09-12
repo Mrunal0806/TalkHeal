@@ -1,5 +1,7 @@
 import streamlit as st
-from auth.auth_utils import register_user, authenticate_user
+from auth.auth_utils import register_user, authenticate_user , check_user
+from auth.mail_utils import send_reset_email
+from auth.jwt_utils import create_reset_token
 
 def show_login_page():
     """Renders the login/signup page with the modern dark theme."""
@@ -52,6 +54,9 @@ def show_login_page():
         @keyframes floatLogo {
             0% { transform: translateY(0); }
             100% { transform: translateY(-12px); }
+        }
+        .st-emotion-cache-1n6tfoc {
+            gap: 0.7rem !important;  
         }
         .auth-title {
             text-align: center;
@@ -147,9 +152,34 @@ def show_login_page():
     if "show_signup" not in st.session_state:
         st.session_state.show_signup = False
 
+    if "show_forget_page" not in st.session_state:
+        st.session_state.show_forget_page = False
+
+    if "otp_page" not in st.session_state:
+        st.session_state.otp_page = False
+    
+    
+    if "notify_page" not in st.session_state:
+        st.session_state.notify_page = False
+
+
     is_signup = st.session_state.show_signup
-    title = "Create Your Account" if is_signup else "Welcome Back Healer!!"
-    subtitle_text = "Join TalkHeal to get started 🩷" if is_signup else "Login to continue your journey 🩷"
+    show_forget_page = st.session_state.show_forget_page
+    otp_page = st.session_state.otp_page
+    notify_page = st.session_state.notify_page
+
+    if is_signup:
+        title = "Create Your Account"
+        subtitle_text = "Join TalkHeal to get started 🩷"
+    elif notify_page:
+        title = "Resent Mail sent"
+        subtitle_text = "Please check your inbox."
+    elif show_forget_page:
+        title = "Reset Your Password"
+        subtitle_text = "Enter Your Registered email"
+    else:
+        title = "Welcome Back Healer!!"
+        subtitle_text = "Login to continue your journey 🩷"
 
     st.markdown('<div class="logo-animated"><img src="https://raw.githubusercontent.com/eccentriccoder01/TalkHeal/main/static_files/TalkHealLogo.png" alt="Logo"/></div>', unsafe_allow_html=True)
     st.markdown(f'<div class="auth-title" style="color:#ffb6d5;">{title}</div>', unsafe_allow_html=True)
@@ -182,6 +212,38 @@ def show_login_page():
                 st.session_state.show_signup = False
                 st.rerun()
             st.markdown('</div>', unsafe_allow_html=True)
+    elif show_forget_page:
+        with form_container:
+            email = st.text_input("Email", placeholder="your.email@example.com", label_visibility="collapsed", key="signup_email")
+            st.markdown('<div class="auth-button">', unsafe_allow_html=True)
+            if st.button("Send Reset Link", key="forget_submit"):
+                if not email :
+                    st.warning("Please fill out email id")
+                else:
+                    success, updated_at = check_user(email)
+                    if success:
+                        mail_status = send_reset_email(email,create_reset_token(email,updated_at))
+                        if mail_status: 
+                            st.success("Password Email sent!")
+                            st.session_state.show_forget_page = False
+                            st.session_state.notify_page=True
+                            st.rerun()
+                        else:
+                            st.error("Error while Sending Email!")
+                    else:
+                        st.error("User does not exist ! Please Sign Up First")
+            st.markdown('</div>', unsafe_allow_html=True)
+
+            st.markdown('<div class="switch-link">', unsafe_allow_html=True)
+            if st.button("Already have an account? Login", key="switch_to_login"):
+                st.session_state.show_forget_page = False
+                st.session_state.show_login_page=True
+                st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
+    elif notify_page:
+        st.success("✅ Password reset email sent! Please check your inbox.")
+        st.session_state.notify_page = False  
+        st.stop()
     else:
         with form_container:
             email = st.text_input("Email", placeholder="your.email@example.com", label_visibility="collapsed", key="login_email")
@@ -200,6 +262,14 @@ def show_login_page():
                     else:
                         st.error("Invalid email or password.")
             st.markdown('</div>', unsafe_allow_html=True)
+
+            st.markdown('<div class="auth-button">', unsafe_allow_html=True)
+            if st.button("Forget Password?", key="switch_to_forget_page"):
+                st.session_state.show_signup = False
+                st.session_state.show_forget_page = True
+                st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
+
 
             st.markdown('<div class="switch-link">', unsafe_allow_html=True)
             if st.button("Don't have an account? Sign up", key="switch_to_signup"):
